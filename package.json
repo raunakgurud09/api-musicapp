@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --config nodemon.js src/index.ts",
-    "build": "npm install",
+    "build": "rimraf ./build && tsc",
     "start": "node build/index.js"
   },
   "keywords": [],

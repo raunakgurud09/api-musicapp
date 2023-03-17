@@ -20,6 +20,6 @@ router
     .post(requiresUser_middleware_1.default, authenticate_1.default, user_router_1.uploads.single('image'), track_controller_1.uploadImage);
 router
     .route('/:trackId')
-    .get(requiresUser_middleware_1.default, authenticate_1.default, track_controller_1.trackDisplay)
+    .get(requiresUser_middleware_1.default, track_controller_1.trackDisplay)
     .put(requiresUser_middleware_1.default, authenticate_1.default, track_controller_1.trackUpdate)
     .delete(requiresUser_middleware_1.default, authenticate_1.default, track_controller_1.trackDelete);
