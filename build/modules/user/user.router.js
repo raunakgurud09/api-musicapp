@@ -13,14 +13,23 @@ var user_controller_1 = require("./user.controller");
 var requiresUser_middleware_1 = __importDefault(require("../../middleware/requiresUser.middleware"));
 var auth_middleware_1 = __importDefault(require("../../middleware/auth.middleware"));
 var fileFilter = function (req, file, cb) {
-    if (file.mimetype.startsWith('audio')) {
+    if (file.mimetype.startsWith('image') || file.mimetype.startsWith('audio')) {
         cb(null, true);
     }
     else {
         cb('invalid image file!', false);
     }
 };
+var fileAudioFiler = function (req, file, cb) {
+    if (file.mimetype.startsWith('audio')) {
+        cb(null, true);
+    }
+    else {
+        cb('invalid audio file!', false);
+    }
+};
 exports.uploads = (0, multer_1.default)({ storage: storage, fileFilter: fileFilter });
+// export const audioUploads = multer({ storage, fileAudioFiler })
 Router.route('/profile').get(requiresUser_middleware_1.default, user_controller_1.getUserProfileHandler);
 Router.post('/upload-avatar', requiresUser_middleware_1.default, exports.uploads.single('image'), user_controller_1.uploadAvatarHandler);
 Router.route('/audio').post(exports.uploads.single('audio'), user_controller_1.audioUploader);

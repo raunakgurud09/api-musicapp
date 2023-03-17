@@ -11,7 +11,7 @@ const uploadAudio = async (
 
     if (!audioUrl) return { message: 'audio not uploaded' }
 
-    return audioUrl.secure_url
+    return 
   } catch (error) {
     return ''
   }

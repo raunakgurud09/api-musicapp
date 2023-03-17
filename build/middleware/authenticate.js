@@ -37,40 +37,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = require("lodash");
-var general_model_1 = require("../modules/general/general.model");
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// const authorizePermissions = (...roles: any) => {
-//   return (req: any, res: Response, next: NextFunction) => {
-//     if (!roles.includes(req.user.role)) {
-//       return res
-//         .status(401)
-//         .json({ message: 'Unauthorized to access this route' })
-//     }
-//     next()
-//   }
-// }
+var track_model_1 = require("../modules/tracks/track.model");
 var authenticatePermission = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, ngo_name, ngo, error_1;
+    var user, trackId, track, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 user = (0, lodash_1.get)(req, 'user');
-                ngo_name = req.params.ngo_name;
+                trackId = req.params.trackId;
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, general_model_1.Ngo.findOne({ name: ngo_name }).populate('')];
+                return [4 /*yield*/, track_model_1.Track.findOne({ _id: trackId }).populate('')];
             case 2:
-                ngo = _a.sent();
-                if (!ngo) {
+                track = _a.sent();
+                if (!track) {
                     return [2 /*return*/, res.status(404).json({ message: 'Page not found' })];
                 }
-                // res.status(200).json({ ngo, message: 'hi' })
-                // check ngo users edit
-                if (!ngo.users.includes(user.email)) {
+                // if (track.userId._id !== user.userId) {
+                //   return res
+                //     .status(401)
+                //     .json({ message: 'Unauthorized to access others track' })
+                // }
+                if (track.userId !== user.userId) {
                     return [2 /*return*/, res
                             .status(401)
-                            .json({ message: 'Unauthorized to access this route' })];
+                            .json({ message: 'Unauthorized to access others track' })];
                 }
                 return [2 /*return*/, next()];
             case 3:

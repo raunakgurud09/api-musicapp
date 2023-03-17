@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer"
+import nodemailer from 'nodemailer'
 const nodemailerConfig = {
   host: 'smtp.gmail.com',
   port: 465,
@@ -11,13 +11,13 @@ const nodemailerConfig = {
 let transport = nodemailer.createTransport(nodemailerConfig)
 // nodemailerConfig
 
-const sendMail = async (email, {...props}) => {
+const sendMail = async (email: any, { ...props }) => {
   // let testAccount = await nodemailer.createTestAccount();
   const mailOptions = {
     from: process.env.GMAIL_USER_EMAIL, // Sender address
     to: email, // List of recipients
-    subject: {props.subject}, // Subject line
-    text: `Your OTP is ${otp}` // Plain text body
+    subject: '', // Subject line
+    text: `Your OTP is }` // Plain text body
   }
 
   const result = await transport.sendMail(mailOptions, (err, info) => {
