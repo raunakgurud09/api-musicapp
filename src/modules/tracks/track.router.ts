@@ -35,7 +35,7 @@ router
 
 router
   .route('/:trackId')
-  .get(requiresUser, authenticatePermission, trackDisplay)
+  .get(requiresUser, trackDisplay)
   .put(requiresUser, authenticatePermission, trackUpdate)
   .delete(requiresUser, authenticatePermission, trackDelete)
 
