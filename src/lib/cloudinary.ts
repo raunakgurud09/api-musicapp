@@ -1,4 +1,4 @@
-import cloudinary from 'cloudinary'
+import cloudinary from "cloudinary"
 import config from '../configs/index.config'
 
 cloudinary.v2.config({
@@ -28,10 +28,11 @@ export const Cloudinary = {
         eager_async: true,
         eager_notification_url: 'https://mysite.example.com/notify_endpoint'
       })
-      return audioUrl
+      console.log(typeof(audioUrl.secure_url))
+      return audioUrl.secure_url
     } catch (error) {
       console.log(error)
-      return
+      return 
     }
   },
   upload: async (
@@ -41,13 +42,14 @@ export const Cloudinary = {
   ) => {
     try {
       const res = await cloudinary.v2.uploader.upload(image.path, {
-        public_id: `ngo_builder/${folder}`,
+        public_id: `image/${folder}`,
         transformation: [{ width, height, crop: 'fill' }],
         overwrite: true,
         invalidate: true
       })
       return res.secure_url
     } catch (error) {
+      console.log(error)
       return
     }
   }

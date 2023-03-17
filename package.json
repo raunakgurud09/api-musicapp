@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon --config nodemon.js src/index.ts",
     "build": "npm install",
     "start": "node build/index.js"
   },
@@ -15,7 +15,7 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
-    "cloudinary": "^1.33.0",
+    "cloudinary": "^1.35.0",
     "cookie-parser": "^1.4.6",
     "dayjs": "^1.11.6",
     "dotenv": "^16.0.3",
