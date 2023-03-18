@@ -37,8 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = require("lodash");
+var playlist_model_1 = require("../modules/playlist/playlist.model");
 var track_model_1 = require("../modules/tracks/track.model");
-var authenticatePermission = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+var trackPermission = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var user, trackId, track, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -74,4 +75,38 @@ var authenticatePermission = function (req, res, next) { return __awaiter(void 0
         }
     });
 }); };
-exports.default = authenticatePermission;
+var playlistPermission = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, playlistId, playlist, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                user = (0, lodash_1.get)(req, 'user');
+                playlistId = req.params.playlistId;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, playlist_model_1.Playlist.findOne({ _id: playlistId }).populate('userId')];
+            case 2:
+                playlist = _a.sent();
+                if (!playlist) {
+                    return [2 /*return*/, res.status(404).json({ message: 'playlist not found' })];
+                }
+                if (playlist.userId._id.toString() !== user.userId) {
+                    return [2 /*return*/, res
+                            .status(401)
+                            .json({ message: 'Unauthorized to access others playlist' })];
+                }
+                return [2 /*return*/, next()];
+            case 3:
+                error_2 = _a.sent();
+                console.log(error_2);
+                res.status(400).json({ message: 'error ' });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.default = {
+    trackPermission: trackPermission,
+    playlistPermission: playlistPermission
+};

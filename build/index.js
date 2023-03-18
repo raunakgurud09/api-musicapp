@@ -62,11 +62,13 @@ var router_1 = require("./modules/auth/router");
 var user_router_1 = require("./modules/user/user.router");
 var admin_router_1 = require("./modules/admin/admin.router");
 var track_router_1 = require("./modules/tracks/track.router");
+var playlist_router_1 = require("./modules/playlist/playlist.router");
 app.get('/', function (req, res) { return res.send('working'); });
 app.use('/api/v1/auth', router_1.authRouter);
 app.use('/api/v1/user', user_router_1.userRouter);
 app.use('/api/v1/admin', admin_router_1.adminRouter);
 app.use('/api/v1/track', track_router_1.trackRouter);
+app.use('/api/v1/playlist', playlist_router_1.playlistRouter);
 var PORT = index_config_1.default.port;
 app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {

@@ -2,7 +2,6 @@ import { Schema, model, Document, Types } from 'mongoose'
 const { String, ObjectId } = Schema.Types
 
 export interface TrackDocument extends Document {
-  uploadAudio(audio: Express.Multer.File): unknown
   name: string
   imageUrl: string
   audioUrl: string

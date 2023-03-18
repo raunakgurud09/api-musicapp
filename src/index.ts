@@ -5,13 +5,13 @@ import deserializeUser from './middleware/deserializeUser.middleware'
 import config from './configs/index.config'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
-import cors from "cors"
+import cors from 'cors'
 
 const app = express()
 app.use(cors({ origin: '*' }))
 app.use(cookieParser())
 app.use(bodyParser.json({ limit: '50mb' }))
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(deserializeUser)
 
 // Middleware
@@ -25,13 +25,14 @@ import { authRouter } from './modules/auth/router'
 import { userRouter } from './modules/user/user.router'
 import { adminRouter } from './modules/admin/admin.router'
 import { trackRouter } from './modules/tracks/track.router'
+import { playlistRouter } from './modules/playlist/playlist.router'
 
 app.get('/', (req, res) => res.send('working'))
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/admin', adminRouter)
-app.use('/api/v1/track',trackRouter)
-
+app.use('/api/v1/track', trackRouter)
+app.use('/api/v1/playlist', playlistRouter)
 
 const PORT = config.port as number
 

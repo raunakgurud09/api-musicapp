@@ -14,12 +14,12 @@ exports.trackRouter = router;
 router.route('/').post(requiresUser_middleware_1.default, user_router_1.uploads.any(), track_controller_1.createTrack).get(track_controller_1.allTracks);
 router
     .route('/:trackId/audio')
-    .post(requiresUser_middleware_1.default, authenticate_1.default, user_router_1.uploads.single('audio'), track_controller_1.uploadAudio);
+    .post(requiresUser_middleware_1.default, authenticate_1.default.trackPermission, user_router_1.uploads.single('audio'), track_controller_1.uploadAudio);
 router
     .route('/:trackId/image')
-    .post(requiresUser_middleware_1.default, authenticate_1.default, user_router_1.uploads.single('image'), track_controller_1.uploadImage);
+    .post(requiresUser_middleware_1.default, authenticate_1.default.trackPermission, user_router_1.uploads.single('image'), track_controller_1.uploadImage);
 router
     .route('/:trackId')
     .get(requiresUser_middleware_1.default, track_controller_1.trackDisplay)
-    .put(requiresUser_middleware_1.default, authenticate_1.default, track_controller_1.trackUpdate)
-    .delete(requiresUser_middleware_1.default, authenticate_1.default, track_controller_1.trackDelete);
+    .put(requiresUser_middleware_1.default, authenticate_1.default.trackPermission, track_controller_1.trackUpdate)
+    .delete(requiresUser_middleware_1.default, authenticate_1.default.trackPermission, track_controller_1.trackDelete);

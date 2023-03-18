@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import authenticatePermission from '../../middleware/authenticate'
+import authenticate from '../../middleware/authenticate'
 import requiresUser from '../../middleware/requiresUser.middleware'
 import { uploads } from '../user/user.router'
 import {
@@ -20,7 +20,7 @@ router
   .route('/:trackId/audio')
   .post(
     requiresUser,
-    authenticatePermission,
+    authenticate.trackPermission,
     uploads.single('audio'),
     uploadAudio
   )
@@ -28,7 +28,7 @@ router
   .route('/:trackId/image')
   .post(
     requiresUser,
-    authenticatePermission,
+    authenticate.trackPermission,
     uploads.single('image'),
     uploadImage
   )
@@ -36,7 +36,7 @@ router
 router
   .route('/:trackId')
   .get(requiresUser, trackDisplay)
-  .put(requiresUser, authenticatePermission, trackUpdate)
-  .delete(requiresUser, authenticatePermission, trackDelete)
+  .put(requiresUser, authenticate.trackPermission, trackUpdate)
+  .delete(requiresUser, authenticate.trackPermission, trackDelete)
 
 export { router as trackRouter }
