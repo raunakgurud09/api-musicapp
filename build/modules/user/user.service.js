@@ -64,7 +64,7 @@ var uploadAvatar = function (user, image) { return __awaiter(void 0, void 0, voi
             case 0:
                 if (!image)
                     return [2 /*return*/, { message: 'File not uploaded properly' }];
-                return [4 /*yield*/, cloudinary_1.Cloudinary.upload(image, 'avatar', {
+                return [4 /*yield*/, cloudinary_1.Cloudinary.uploadImageFile(image, 'avatar', {
                         height: 600,
                         width: 600
                     })];

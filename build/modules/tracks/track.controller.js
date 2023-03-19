@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadImage = exports.uploadAudio = exports.trackDelete = exports.trackUpdate = exports.trackDisplay = exports.allTracks = exports.createTrack = void 0;
+exports.uploadImage = exports.uploadAudio = exports.trackDelete = exports.trackUpdate = exports.trackDisplay = exports.getMyTracks = exports.allTracks = exports.createTrack = void 0;
 var lodash_1 = require("lodash");
 var cloudinary_1 = require("../../lib/cloudinary");
 var track_model_1 = require("./track.model");
@@ -99,8 +99,37 @@ var allTracks = function (req, res) { return __awaiter(void 0, void 0, void 0, f
     });
 }); };
 exports.allTracks = allTracks;
+var getMyTracks = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, tracks, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userId = (0, lodash_1.get)(req, 'user').userId;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, track_model_1.Track.find({ userId: userId })];
+            case 2:
+                tracks = _a.sent();
+                res
+                    .status(200)
+                    .json({
+                    data: { tracks: tracks, count: tracks.length },
+                    message: 'All users track'
+                });
+                return [3 /*break*/, 4];
+            case 3:
+                error_3 = _a.sent();
+                console.log(error_3);
+                res.status(500).json({ message: 'Cant get tracks' });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getMyTracks = getMyTracks;
 var trackDisplay = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var trackId, track, error_3;
+    var trackId, track, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -114,8 +143,8 @@ var trackDisplay = function (req, res) { return __awaiter(void 0, void 0, void 0
                 res.status(200).json({ data: { track: track } });
                 return [3 /*break*/, 4];
             case 3:
-                error_3 = _a.sent();
-                console.log(error_3);
+                error_4 = _a.sent();
+                console.log(error_4);
                 res.status(500).json({ message: 'cant get this track' });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
@@ -124,7 +153,7 @@ var trackDisplay = function (req, res) { return __awaiter(void 0, void 0, void 0
 }); };
 exports.trackDisplay = trackDisplay;
 var trackUpdate = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var trackId, _a, name, lyrics, artist, track, error_4;
+    var trackId, _a, name, lyrics, artist, isUnique, track, error_5;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -132,24 +161,30 @@ var trackUpdate = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 _a = req.body, name = _a.name, lyrics = _a.lyrics, artist = _a.artist;
                 _b.label = 1;
             case 1:
-                _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, track_model_1.Track.findOneAndUpdate({ _id: trackId }, { name: name, lyrics: lyrics, artist: artist })];
+                _b.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, track_model_1.Track.findOne({ name: name })];
             case 2:
+                isUnique = _b.sent();
+                if (isUnique) {
+                    return [2 /*return*/, res.status(400).json({ message: "same track name is not allowed" })];
+                }
+                return [4 /*yield*/, track_model_1.Track.findOneAndUpdate({ _id: trackId }, { name: name, lyrics: lyrics, artist: artist })];
+            case 3:
                 track = _b.sent();
                 res.status(200).json({ data: { track: track } });
-                return [3 /*break*/, 4];
-            case 3:
-                error_4 = _b.sent();
-                console.log(error_4);
+                return [3 /*break*/, 5];
+            case 4:
+                error_5 = _b.sent();
+                console.log(error_5);
                 res.status(500).json({ message: 'cant get this track' });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
 exports.trackUpdate = trackUpdate;
 var trackDelete = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var trackId, track, error_5;
+    var trackId, track, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -163,8 +198,8 @@ var trackDelete = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 res.status(200).json({ message: 'Track deleted' });
                 return [3 /*break*/, 4];
             case 3:
-                error_5 = _a.sent();
-                console.log(error_5);
+                error_6 = _a.sent();
+                console.log(error_6);
                 res.status(500).json({ message: 'cant get this track' });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
@@ -173,11 +208,13 @@ var trackDelete = function (req, res) { return __awaiter(void 0, void 0, void 0,
 }); };
 exports.trackDelete = trackDelete;
 var uploadAudio = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var audio, trackId, track, audioUrl, error_6;
+    var audio, trackId, track, audioUrl, error_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                audio = (0, lodash_1.get)(req, 'file');
+                // const audio = get(req, 'file')
+                console.log('audio uploader');
+                audio = req.body.audio;
                 trackId = req.params.trackId;
                 _a.label = 1;
             case 1:
@@ -189,7 +226,7 @@ var uploadAudio = function (req, res) { return __awaiter(void 0, void 0, void 0,
                     return [2 /*return*/, res.status(400).json({ message: "Track doesn't exist" })];
                 if (!audio)
                     return [2 /*return*/, res.status(400).json({ message: 'Audio is required' })];
-                return [4 /*yield*/, cloudinary_1.Cloudinary.uploadAudioFile(audio, "/".concat(trackId))];
+                return [4 /*yield*/, cloudinary_1.Cloudinary.uploadAudioString(audio, "/".concat(trackId))];
             case 3:
                 audioUrl = _a.sent();
                 if (!audioUrl)
@@ -201,8 +238,8 @@ var uploadAudio = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 res.status(201).json({ data: { track: track }, message: 'Audio url added' });
                 return [3 /*break*/, 6];
             case 5:
-                error_6 = _a.sent();
-                console.log(error_6);
+                error_7 = _a.sent();
+                console.log(error_7);
                 res.status(500).json({ message: 'cant get this track' });
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
@@ -211,11 +248,12 @@ var uploadAudio = function (req, res) { return __awaiter(void 0, void 0, void 0,
 }); };
 exports.uploadAudio = uploadAudio;
 var uploadImage = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var image, trackId, track, imageUrl, error_7;
+    var image, trackId, track, imageUrl, error_8;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                image = (0, lodash_1.get)(req, 'file');
+                console.log("image uploader");
+                image = req.body.image;
                 trackId = req.params.trackId;
                 _a.label = 1;
             case 1:
@@ -227,7 +265,7 @@ var uploadImage = function (req, res) { return __awaiter(void 0, void 0, void 0,
                     return [2 /*return*/, res.status(400).json({ message: "Track doesn't exist" })];
                 if (!image)
                     return [2 /*return*/, res.status(400).json({ message: 'Image is required' })];
-                return [4 /*yield*/, cloudinary_1.Cloudinary.upload(image, "/".concat(trackId), {
+                return [4 /*yield*/, cloudinary_1.Cloudinary.uploadImageFile(image, "/".concat(trackId), {
                         width: 600,
                         height: 600
                     })];
@@ -242,8 +280,8 @@ var uploadImage = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 res.status(201).json({ data: { track: track }, message: 'Image url added' });
                 return [3 /*break*/, 6];
             case 5:
-                error_7 = _a.sent();
-                console.log(error_7);
+                error_8 = _a.sent();
+                console.log(error_8);
                 res.status(500).json({ message: 'cant get this track' });
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];

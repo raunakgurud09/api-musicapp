@@ -6,8 +6,8 @@ import Users from './user.service'
 
 export async function uploadAvatarHandler(req: Request, res: Response) {
   // const image = req.file
-
-  const image = get(req, 'file')
+  const { image } = req.body.files
+  // const image = get(req, 'file')
   const user = get(req, 'user')
 
   const result = await Users.uploadAvatar(user, image)
@@ -38,8 +38,11 @@ export async function audioUploader(req: Request, res: Response) {
   console.log(audio)
   if (!audio) return { message: 'File not uploaded properly' }
 
-  const audioUrl = await Cloudinary.uploadAudioFile(audio, `audio/${audio.originalname}`)
+  const audioUrl = await Cloudinary.uploadAudioFile(
+    audio,
+    `audio/${audio.originalname}`
+  )
   if (!audioUrl) return { message: 'Avatar not uploaded' }
 
-  res.status(200).json({ audioUrl,message: 'good' })
+  res.status(200).json({ audioUrl, message: 'good' })
 }

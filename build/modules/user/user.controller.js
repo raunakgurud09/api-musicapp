@@ -50,7 +50,7 @@ function uploadAvatarHandler(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    image = (0, lodash_1.get)(req, 'file');
+                    image = req.body.files.image;
                     user = (0, lodash_1.get)(req, 'user');
                     return [4 /*yield*/, user_service_1.default.uploadAvatar(user, image)];
                 case 1:
