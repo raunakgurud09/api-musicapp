@@ -16,7 +16,7 @@ import {
 const router = Router()
 
 router.route('/').post(requiresUser, uploads.any(), createTrack).get(allTracks)
-router.get("/me",requiresUser,getMyTracks)
+router.get('/me', requiresUser, getMyTracks)
 
 router
   .route('/:trackId/audio')

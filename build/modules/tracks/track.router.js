@@ -12,7 +12,7 @@ var track_controller_1 = require("./track.controller");
 var router = (0, express_1.Router)();
 exports.trackRouter = router;
 router.route('/').post(requiresUser_middleware_1.default, user_router_1.uploads.any(), track_controller_1.createTrack).get(track_controller_1.allTracks);
-router.get("/me", requiresUser_middleware_1.default, track_controller_1.getMyTracks);
+router.get('/me', requiresUser_middleware_1.default, track_controller_1.getMyTracks);
 router
     .route('/:trackId/audio')
     .post(requiresUser_middleware_1.default, authenticate_1.default.trackPermission, user_router_1.uploads.single('audio'), track_controller_1.uploadAudio);

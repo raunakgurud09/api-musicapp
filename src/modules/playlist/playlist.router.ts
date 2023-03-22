@@ -7,6 +7,7 @@ import {
   allUsersPlaylists,
   createPlaylist,
   deletePlaylist,
+  getOpenPlaylists,
   getPrivatePlaylists,
   getPublicPlaylists,
   playlistTracks,
@@ -16,6 +17,7 @@ import {
 } from './playlist.controller'
 const router = Router()
 
+router.get('/', getOpenPlaylists)
 router.use(requiresUser)
 
 router.post('/', createPlaylist)

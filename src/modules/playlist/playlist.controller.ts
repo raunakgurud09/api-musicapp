@@ -5,6 +5,15 @@ import { Track } from '../tracks/track.model'
 import User from '../user/user.model'
 import { Playlist } from './playlist.model'
 
+export const getOpenPlaylists = async (req: Request, res: Response) => {
+  try {
+    const playlists = await Playlist.find({})
+    res.status(200).json({ data: { playlists },message:"Public playlist" })
+  } catch (error) {
+    res.status(500).json({ message: 'server error' })
+  }
+}
+
 export const createPlaylist = async (req: Request, res: Response) => {
   const { name, isPublic } = req.body
   const { userId }: any = get(req, 'user')
@@ -117,7 +126,7 @@ export const getPrivatePlaylists = async (req: Request, res: Response) => {
     const user = await User.findOne({ _id: userId })
     if (!user) return res.status(400).json({ message: 'No user found' })
 
-    const playlist = await Playlist.find({ _id: playlistId }).populate('tracks')
+    const playlist = await Playlist.findOne({ _id: playlistId }).populate('tracks')
 
     res.status(200).json({ data: { playlist }, message: 'All users playlist' })
   } catch (error) {

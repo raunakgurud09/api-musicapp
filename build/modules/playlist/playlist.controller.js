@@ -39,14 +39,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removePlaylistTrack = exports.addPlaylistTracks = exports.playlistTracks = exports.allUsersPlaylists = exports.getPrivatePlaylists = exports.getPublicPlaylists = exports.deletePlaylist = exports.updatePlaylist = exports.uploadPlaylistImage = exports.createPlaylist = void 0;
+exports.removePlaylistTrack = exports.addPlaylistTracks = exports.playlistTracks = exports.allUsersPlaylists = exports.getPrivatePlaylists = exports.getPublicPlaylists = exports.deletePlaylist = exports.updatePlaylist = exports.uploadPlaylistImage = exports.createPlaylist = exports.getOpenPlaylists = void 0;
 var lodash_1 = require("lodash");
 var cloudinary_1 = require("../../lib/cloudinary");
 var track_model_1 = require("../tracks/track.model");
 var user_model_1 = __importDefault(require("../user/user.model"));
 var playlist_model_1 = require("./playlist.model");
+var getOpenPlaylists = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var playlists, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, playlist_model_1.Playlist.find({})];
+            case 1:
+                playlists = _a.sent();
+                res.status(200).json({ data: { playlists: playlists }, message: "Public playlist" });
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                res.status(500).json({ message: 'server error' });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getOpenPlaylists = getOpenPlaylists;
 var createPlaylist = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name, isPublic, userId, playlist, error_1;
+    var _a, name, isPublic, userId, playlist, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -68,8 +88,8 @@ var createPlaylist = function (req, res) { return __awaiter(void 0, void 0, void
                 res.status(200).json({ data: { playlist: playlist }, message: 'Playlist created' });
                 return [3 /*break*/, 4];
             case 3:
-                error_1 = _b.sent();
-                console.log(error_1);
+                error_2 = _b.sent();
+                console.log(error_2);
                 res.status(500).json({ message: "Can't create playlist" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
@@ -78,7 +98,7 @@ var createPlaylist = function (req, res) { return __awaiter(void 0, void 0, void
 }); };
 exports.createPlaylist = createPlaylist;
 var uploadPlaylistImage = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var image, playlistId, userId, playlist, imageUrl, error_2;
+    var image, playlistId, userId, playlist, imageUrl, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -110,8 +130,8 @@ var uploadPlaylistImage = function (req, res) { return __awaiter(void 0, void 0,
                 res.status(201).json({ data: { playlist: playlist } });
                 return [3 /*break*/, 6];
             case 5:
-                error_2 = _a.sent();
-                console.log(error_2);
+                error_3 = _a.sent();
+                console.log(error_3);
                 res.status(500).json({ message: 'Not able to upload' });
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
@@ -120,7 +140,7 @@ var uploadPlaylistImage = function (req, res) { return __awaiter(void 0, void 0,
 }); };
 exports.uploadPlaylistImage = uploadPlaylistImage;
 var updatePlaylist = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var playlistId, _a, name, isPublic, playlist, error_3;
+    var playlistId, _a, name, isPublic, playlist, error_4;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -140,8 +160,8 @@ var updatePlaylist = function (req, res) { return __awaiter(void 0, void 0, void
                 res.status(200).json({ data: { playlist: playlist } });
                 return [3 /*break*/, 5];
             case 4:
-                error_3 = _b.sent();
-                console.log(error_3);
+                error_4 = _b.sent();
+                console.log(error_4);
                 res.status(500).json({ message: 'cant get this playlist' });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -150,7 +170,7 @@ var updatePlaylist = function (req, res) { return __awaiter(void 0, void 0, void
 }); };
 exports.updatePlaylist = updatePlaylist;
 var deletePlaylist = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var playlistId, playlist, error_4;
+    var playlistId, playlist, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -164,8 +184,8 @@ var deletePlaylist = function (req, res) { return __awaiter(void 0, void 0, void
                 res.status(200).json({ message: 'Playlist deleted' });
                 return [3 /*break*/, 4];
             case 3:
-                error_4 = _a.sent();
-                console.log(error_4);
+                error_5 = _a.sent();
+                console.log(error_5);
                 res.status(500).json({ message: 'cant get this Playlist' });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
@@ -174,7 +194,7 @@ var deletePlaylist = function (req, res) { return __awaiter(void 0, void 0, void
 }); };
 exports.deletePlaylist = deletePlaylist;
 var getPublicPlaylists = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, user, playlists, publicPlaylist, error_5;
+    var userId, user, playlists, publicPlaylist, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -201,8 +221,8 @@ var getPublicPlaylists = function (req, res) { return __awaiter(void 0, void 0, 
                     .json({ data: { publicPlaylist: publicPlaylist }, message: 'All users playlist' });
                 return [3 /*break*/, 5];
             case 4:
-                error_5 = _a.sent();
-                console.log(error_5);
+                error_6 = _a.sent();
+                console.log(error_6);
                 res.status(500).json({ message: "can't get users playlist" });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -211,7 +231,7 @@ var getPublicPlaylists = function (req, res) { return __awaiter(void 0, void 0, 
 }); };
 exports.getPublicPlaylists = getPublicPlaylists;
 var getPrivatePlaylists = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var playlistId, userId, user, playlist, error_6;
+    var playlistId, userId, user, playlist, error_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -225,14 +245,14 @@ var getPrivatePlaylists = function (req, res) { return __awaiter(void 0, void 0,
                 user = _a.sent();
                 if (!user)
                     return [2 /*return*/, res.status(400).json({ message: 'No user found' })];
-                return [4 /*yield*/, playlist_model_1.Playlist.find({ _id: playlistId }).populate('tracks')];
+                return [4 /*yield*/, playlist_model_1.Playlist.findOne({ _id: playlistId }).populate('tracks')];
             case 3:
                 playlist = _a.sent();
                 res.status(200).json({ data: { playlist: playlist }, message: 'All users playlist' });
                 return [3 /*break*/, 5];
             case 4:
-                error_6 = _a.sent();
-                console.log(error_6);
+                error_7 = _a.sent();
+                console.log(error_7);
                 res.status(500).json({ message: "can't get users playlist" });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -241,7 +261,7 @@ var getPrivatePlaylists = function (req, res) { return __awaiter(void 0, void 0,
 }); };
 exports.getPrivatePlaylists = getPrivatePlaylists;
 var allUsersPlaylists = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, user, playlists, error_7;
+    var userId, user, playlists, error_8;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -260,8 +280,8 @@ var allUsersPlaylists = function (req, res) { return __awaiter(void 0, void 0, v
                 res.status(200).json({ data: { playlists: playlists }, message: 'All users playlist' });
                 return [3 /*break*/, 5];
             case 4:
-                error_7 = _a.sent();
-                console.log(error_7);
+                error_8 = _a.sent();
+                console.log(error_8);
                 res.status(500).json({ message: "can't get users playlist" });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -270,7 +290,7 @@ var allUsersPlaylists = function (req, res) { return __awaiter(void 0, void 0, v
 }); };
 exports.allUsersPlaylists = allUsersPlaylists;
 var playlistTracks = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, user, playlists, error_8;
+    var userId, user, playlists, error_9;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -289,8 +309,8 @@ var playlistTracks = function (req, res) { return __awaiter(void 0, void 0, void
                 res.status(200).json({ data: { playlists: playlists }, message: 'All users playlist' });
                 return [3 /*break*/, 5];
             case 4:
-                error_8 = _a.sent();
-                console.log(error_8);
+                error_9 = _a.sent();
+                console.log(error_9);
                 res.status(500).json({ message: "can't get users playlist" });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -299,7 +319,7 @@ var playlistTracks = function (req, res) { return __awaiter(void 0, void 0, void
 }); };
 exports.playlistTracks = playlistTracks;
 var addPlaylistTracks = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, playlistId, trackId, playlist, track, isTrackExist, error_9;
+    var _a, playlistId, trackId, playlist, track, isTrackExist, error_10;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -333,8 +353,8 @@ var addPlaylistTracks = function (req, res) { return __awaiter(void 0, void 0, v
                     .json({ data: { playlist: playlist }, message: 'Track added to your list' });
                 return [3 /*break*/, 8];
             case 7:
-                error_9 = _b.sent();
-                console.log(error_9);
+                error_10 = _b.sent();
+                console.log(error_10);
                 res.status(500).json({ message: "Can't update track to playlist" });
                 return [3 /*break*/, 8];
             case 8: return [2 /*return*/];
@@ -343,7 +363,7 @@ var addPlaylistTracks = function (req, res) { return __awaiter(void 0, void 0, v
 }); };
 exports.addPlaylistTracks = addPlaylistTracks;
 var removePlaylistTrack = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, playlistId, trackId, playlist, error_10;
+    var _a, playlistId, trackId, playlist, error_11;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -359,8 +379,8 @@ var removePlaylistTrack = function (req, res) { return __awaiter(void 0, void 0,
                     .json({ data: { playlist: playlist }, message: 'Track deleted from playlist' });
                 return [3 /*break*/, 4];
             case 3:
-                error_10 = _b.sent();
-                console.log(error_10);
+                error_11 = _b.sent();
+                console.log(error_11);
                 res.status(500).json({ message: "Can't update track to playlist" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];

@@ -11,6 +11,7 @@ var user_router_1 = require("../user/user.router");
 var playlist_controller_1 = require("./playlist.controller");
 var router = (0, express_1.Router)();
 exports.playlistRouter = router;
+router.get('/', playlist_controller_1.getOpenPlaylists);
 router.use(requiresUser_middleware_1.default);
 router.post('/', playlist_controller_1.createPlaylist);
 // get all public , private
