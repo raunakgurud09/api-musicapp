@@ -5,8 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.ts",
-    "build": "npm install",
+    "dev": "nodemon --config nodemon.js src/index.ts",
+    "build": "rimraf ./build && tsc",
     "start": "node build/index.js"
   },
   "keywords": [],
@@ -15,11 +15,12 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
-    "cloudinary": "^1.33.0",
+    "cloudinary": "^1.35.0",
     "cookie-parser": "^1.4.6",
     "dayjs": "^1.11.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "google-auth-library": "^8.7.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongoose": "^6.7.1",

@@ -10,6 +10,7 @@ export interface UserDocument extends Document {
   image: string
   isVerified: boolean
   verificationToken?: string
+  googleId?:string
   createdAt: Date
   updatedAt: Date
   comparePassword: (candidatePassword: string) => boolean
@@ -22,14 +23,15 @@ const UserSchema = new Schema({
   role: {
     type: String,
     default: 'user',
-    enum: ['admin', 'user', 'ngo']
+    enum: ['admin', 'user']
   },
   image: {
     type: String,
     default: ''
   },
   isVerified: { type: Boolean, default: false },
-  verificationToken: { type: String }
+  verificationToken: { type: String },
+  googleId: String,
 })
 
 UserSchema.pre('save', async function (next) {

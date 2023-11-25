@@ -1,41 +1,32 @@
 import { NextFunction, Request, Response } from 'express'
 import { get } from 'lodash'
-import { Ngo } from '../modules/general/general.model'
+import { Playlist } from '../modules/playlist/playlist.model'
+import { Track } from '../modules/tracks/track.model'
 
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// const authorizePermissions = (...roles: any) => {
-//   return (req: any, res: Response, next: NextFunction) => {
-//     if (!roles.includes(req.user.role)) {
-//       return res
-//         .status(401)
-//         .json({ message: 'Unauthorized to access this route' })
-//     }
-//     next()
-//   }
-// }
-
-const authenticatePermission = async (
+const trackPermission = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const user: any = get(req, 'user')
 
-  const { ngo_name } = req.params
+  const { trackId } = req.params
 
   try {
-    const ngo = await Ngo.findOne({ name: ngo_name }).populate('')
+    const track = await Track.findOne({ _id: trackId }).populate('')
 
-    if (!ngo) {
+    if (!track) {
       return res.status(404).json({ message: 'Page not found' })
     }
-    // res.status(200).json({ ngo, message: 'hi' })
-    // check ngo users edit
-
-    if (!ngo.users.includes(user.email)) {
+    // if (track.userId._id !== user.userId) {
+    //   return res
+    //     .status(401)
+    //     .json({ message: 'Unauthorized to access others track' })
+    // }
+    if (track.userId !== user.userId) {
       return res
         .status(401)
-        .json({ message: 'Unauthorized to access this route' })
+        .json({ message: 'Unauthorized to access others track' })
     }
     return next()
   } catch (error) {
@@ -43,4 +34,35 @@ const authenticatePermission = async (
     res.status(400).json({ message: 'error' })
   }
 }
-export default authenticatePermission
+
+const playlistPermission = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user: any = get(req, 'user')
+  const { playlistId } = req.params
+
+  try {
+    const playlist = await Playlist.findOne({ _id: playlistId }).populate('userId')
+
+    if (!playlist) {
+      return res.status(404).json({ message: 'playlist not found' })
+    }
+    
+    if (playlist.userId._id.toString() !== user.userId) {
+      return res
+        .status(401)
+        .json({ message: 'Unauthorized to access others playlist' })
+    }
+    return next()
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ message: 'error ' })
+  }
+}
+
+export default {
+  trackPermission,
+  playlistPermission
+}

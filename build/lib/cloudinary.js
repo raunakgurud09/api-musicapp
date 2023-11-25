@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -75,7 +75,8 @@ exports.Cloudinary = {
                         })];
                 case 1:
                     audioUrl = _a.sent();
-                    return [2 /*return*/, audioUrl];
+                    console.log(typeof audioUrl.secure_url);
+                    return [2 /*return*/, audioUrl.secure_url];
                 case 2:
                     error_1 = _a.sent();
                     console.log(error_1);
@@ -84,16 +85,53 @@ exports.Cloudinary = {
             }
         });
     }); },
-    upload: function (image, folder, _a) {
+    uploadAudioString: function (audio, folder) { return __awaiter(void 0, void 0, void 0, function () {
+        var audioUrl, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    if (!audio)
+                        return [2 /*return*/, { message: 'File not uploaded properly' }];
+                    return [4 /*yield*/, cloudinary_1.default.v2.uploader.upload(audio, {
+                            resource_type: 'video',
+                            public_id: "audio/".concat(folder),
+                            chunk_size: 6000000,
+                            eager: [
+                                { width: 300, height: 300, crop: 'pad', audio_codec: 'none' },
+                                {
+                                    width: 160,
+                                    height: 100,
+                                    crop: 'crop',
+                                    gravity: 'south',
+                                    audio_codec: 'none'
+                                }
+                            ],
+                            eager_async: true,
+                            eager_notification_url: 'https://mysite.example.com/notify_endpoint'
+                        })];
+                case 1:
+                    audioUrl = _a.sent();
+                    console.log(typeof audioUrl.secure_url);
+                    return [2 /*return*/, audioUrl.secure_url];
+                case 2:
+                    error_2 = _a.sent();
+                    console.log(error_2);
+                    return [2 /*return*/];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); },
+    uploadImageFile: function (image, folder, _a) {
         var width = _a.width, height = _a.height;
         return __awaiter(void 0, void 0, void 0, function () {
-            var res, error_2;
+            var res, error_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, cloudinary_1.default.v2.uploader.upload(image.path, {
-                                public_id: "ngo_builder/".concat(folder),
+                        return [4 /*yield*/, cloudinary_1.default.v2.uploader.upload(image, {
+                                public_id: "renm/".concat(folder),
                                 transformation: [{ width: width, height: height, crop: 'fill' }],
                                 overwrite: true,
                                 invalidate: true
@@ -102,7 +140,34 @@ exports.Cloudinary = {
                         res = _b.sent();
                         return [2 /*return*/, res.secure_url];
                     case 2:
-                        error_2 = _b.sent();
+                        error_3 = _b.sent();
+                        console.log(error_3);
+                        return [2 /*return*/];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    },
+    upload: function (image, folder, _a) {
+        var width = _a.width, height = _a.height;
+        return __awaiter(void 0, void 0, void 0, function () {
+            var res, error_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, cloudinary_1.default.v2.uploader.upload(image.path, {
+                                public_id: "image/".concat(folder),
+                                transformation: [{ width: width, height: height, crop: 'fill' }],
+                                overwrite: true,
+                                invalidate: true
+                            })];
+                    case 1:
+                        res = _b.sent();
+                        return [2 /*return*/, res.secure_url];
+                    case 2:
+                        error_4 = _b.sent();
+                        console.log(error_4);
                         return [2 /*return*/];
                     case 3: return [2 /*return*/];
                 }

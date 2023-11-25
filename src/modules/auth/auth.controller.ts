@@ -3,6 +3,8 @@ import { createUserSchema } from './user.schema'
 import Auth from './auth.service'
 import validateRequest from '../../middleware/validate.middleware'
 import { attachCookiesToResponse } from '../../utils/attachCookiesToResponse'
+import { Google } from '../../lib/google'
+import User from '../user/user.model'
 
 export const register = async (req: Request, res: Response) => {
   validateRequest(createUserSchema) // Not working
@@ -40,21 +42,43 @@ export const logout = async (req: Request, res: Response) => {
   res.status(200).json({ msg: 'user logged out!' })
 }
 
-// const loginViaGoogle = async (req, res) => {
-//   const { idToken } = req.body
-//   if (!idToken) {
-//     return res.status(402).json({ error: { message: 'id Token is required' } })
-//   }
-//   try {
-//     const response = await Google.verifyIdToken(idToken)
-//   } catch (error) {}
-// }
+export const loginViaGoogle = async (req: Request, res: Response) => {
+  const { idToken } = req.body
+  if (!idToken) {
+    return res.status(402).json({ error: { message: 'id Token is required' } })
+  }
+  try {
+    const response = await Google.verifyIdToken(idToken)
+    if (!response) {
+      return res
+        .status(500)
+        .json({ message: 'Error in logging in. Please try again later' })
+    }
+    const name = response.name as string
+    const email = response.email as string
+    const googleId = response.sub
+    const imageURL = response.picture
+
+    let user: any = await User.find({ googleId })
+
+    if (!user) {
+      user = await User.create({
+        googleId,
+        name,
+        imageURL,
+        email
+      })
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error in logging in' })
+  }
+}
 
 module.exports = {
   register,
   login,
-  logout
-  // loginViaGoogle,
+  logout,
+  loginViaGoogle
   // sendOTP,
   // checkVerificationEmail
 }
